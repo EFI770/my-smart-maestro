@@ -1,0 +1,80 @@
+/* סגנון בסיסי לגוף העמוד */
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center; /* מרכוז אופקי */
+    align-items: center; /* מרכוז אנכי */
+    min-height: 100vh; /* גובה מינימלי מלא של המסך */
+    background-color: #f0f0f0; /* צבע רקע */
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* מונע גלילה של הדף עצמו */
+}
+
+/* מיכל הקוביה - מגדיר את הפרספקטיבה */
+.cube-container {
+    width: 320px; /* רוחב מותאם לאפליקציה */
+    height: 580px; /* גובה מותאם לאפליקציה */
+    perspective: 1000px; /* חשוב לתצוגה תלת מימדית תקינה */
+    position: relative; /* חשוב למיקום המדויק של הדפנות */
+    z-index: 1; /* ודא שהקוביה מעל לרוב האלמנטים */
+}
+
+/* הקוביה עצמה */
+.maestro-cube {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d; /* חשוב לשמירה על תלת מימדיות */
+    transform: rotateY(var(--rotateY, 0deg)); /* משתנה CSS לסיבוב */
+    transition: transform 0.5s ease-out; /* אנימציה חלקה לסיבוב */
+    cursor: grab; /* סמן העכבר המוגדר לאזור הגרירה */
+}
+
+/* סגנון לפאות הקוביה */
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95); /* רקע לבן עם שקיפות קלה */
+    border: 1px solid #ddd; /* גבול עדין לפאות */
+    display: flex;
+    flex-direction: column; /* הצג תוכן אנכית */
+    align-items: center; /* מרכז תוכן אופקית */
+    justify-content: flex-start; /* הצמד תוכן לחלק העליון */
+    padding: 20px; /* ריפוד פנימי */
+    box-sizing: border-box; /* וודא שהריפוד לא מגדיל את הפאה */
+    font-size: 1em;
+    color: #333; /* צבע טקסט כהה יותר */
+    backface-visibility: hidden; /* מונע הצגה של הצד האחורי של הפאה */
+    overflow-y: auto; /* מאפשר גלילה אנכית בתוך הדופן אם התוכן ארוך */
+    overflow-x: hidden; /* מונע גלילה אופקית בתוך הדופן */
+    border-radius: 8px; /* פינות מעוגלות */
+}
+
+/* מיקום הפאות - כל פאה ממוקמת ב-Z ומסובבת בהתאם */
+.face-1 {
+    transform: rotateY(0deg) translateZ(160px); /* 160px הוא חצי מרוחב/גובה הקוביה */
+}
+
+.face-2 {
+    transform: rotateY(90deg) translateZ(160px);
+}
+
+.face-3 {
+    transform: rotateY(180deg) translateZ(160px);
+}
+
+.face-4 {
+    transform: rotateY(270deg) translateZ(160px);
+}
+
+/* אנימציה לפריטים דחופים */
+@keyframes pulse-red {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.animate-pulse-red {
+    animation: pulse-red 2s infinite;
+}

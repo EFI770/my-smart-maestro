@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המאסטרו שלך לצריכה חכמה</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen relative overflow-hidden">
+
+    <div class="cube-container">
+        <div id="maestro-cube" class="maestro-cube">
+            <div class="face face-1 bg-white shadow-lg rounded-lg p-6 flex flex-col h-full">
+                <h1 class="text-3xl font-bold text-center text-blue-700 mb-6">🛍️ המאסטרו שלך לצריכה חכמה, <span id="user-name">משתמש יקר</span> 🧠</h1>
+
+                <section class="mb-8 p-4 bg-blue-50 rounded-md shadow-sm border border-blue-200">
+                    <h2 class="text-xl font-semibold text-blue-800 mb-4 text-center">הוסף פריט חדש</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="item-name-input" placeholder="שם פריט" class="p-3 border border-gray-300 rounded-md text-right" autocomplete="off">
+                        <div id="autocomplete-suggestions" class="absolute bg-white border border-gray-300 rounded-md w-full z-10 hidden max-h-40 overflow-y-auto"></div>
+                        <input type="number" id="item-quantity-input" placeholder="כמות (אופציונלי)" class="p-3 border border-gray-300 rounded-md text-right">
+                        <input type="number" id="item-price-input" placeholder="מחיר ליח' (אופציונלי)" step="0.01" class="p-3 border border-gray-300 rounded-md text-right">
+                        <select id="item-category-select" class="p-3 border border-gray-300 rounded-md text-right bg-white">
+                            <option value="">בחר קטגוריה</option>
+                            <option value="מוצרי חלב">מוצרי חלב</option>
+                            <option value="פירות וירקות">פירות וירקות</option>
+                            <option value="בשר ודגים">בשר ודגים</option>
+                            <option value="מאפים ולחם">מאפים ולחם</option>
+                            <option value="מוצרים יבשים">מוצרים יבשים</option>
+                            <option value="ניקיון">ניקיון</option>
+                            <option value="טיפוח אישי">טיפוח אישי</option>
+                            <option value="אחר">אחר</option>
+                        </select>
+                    </div>
+                    <button id="add-item-btn" class="w-full bg-blue-600 text-white p-3 rounded-md font-semibold hover:bg-blue-700 transition">הוסף לרשימה</button>
+                </section>
+
+                <section class="mb-8 p-4 bg-yellow-50 rounded-md shadow-sm border border-yellow-200">
+                    <h2 class="text-xl font-semibold text-yellow-800 mb-4 text-center">🚨 מה נגמר בקרוב?</h2>
+                    <div id="urgent-items-list" class="space-y-2">
+                        <p class="text-gray-500">כרגע אין פריטים דחופים במיוחד.</p>
+                    </div>
+                </section>
+
+                <section class="mb-8 p-4 bg-green-50 rounded-md shadow-sm border border-green-200" id="budget-summary">
+                    <h2 class="text-xl font-semibold text-green-800 mb-4 text-center">💰 תקציב חודשי</h2>
+                    <div class="text-center mb-4">
+                        <p class="text-lg mb-1">תקציב: <span class="font-bold" id="monthly-budget-amount">₪ 0.00</span></p>
+                        <p class="text-lg mb-1">הוצאת: <span class="font-bold" id="monthly-spent-amount">₪ 0.00</span></p>
+                        <p class="text-xl font-bold text-green-700 mb-2">נותר: <span id="monthly-remaining-amount">₪ 0.00</span></p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                            <div id="budget-progress-bar" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 items-center justify-center">
+                        <input type="number" id="set-monthly-budget" placeholder="הגדר תקציב חודשי" step="0.01" class="p-2 border border-gray-300 rounded-md text-right w-full sm:w-auto flex-grow">
+                        <button id="save-budget-btn" class="bg-green-600 text-white p-2 rounded-md font-semibold hover:bg-green-700 transition w-full sm:w-auto">שמור</button>
+                    </div>
+                </section>
+
+                <section class="mb-8 p-4 bg-purple-50 rounded-md shadow-sm border border-purple-200">
+                    <h2 class="text-xl font-semibold text-purple-800 mb-4 text-center">💡 הצעות חכמות</h2>
+                    <div id="smart-suggestions-list" class="space-y-2">
+                        <p class="text-gray-500">אין הצעות חכמות כרגע.</p>
+                    </div>
+                </section>
+
+                <section class="mb-8 p-4 bg-teal-50 rounded-md shadow-sm border border-teal-200" id="savings-summary">
+                    <h2 class="text-xl font-semibold text-teal-800 mb-4 text-center">✨ סיכום חיסכון והזדמנויות</h2>
+                    <p class="text-lg mb-1 text-center">חיסכון מצטבר: <span class="font-bold" id="total-savings-amount">₪ 0.00</span></p>
+                    <p class="text-lg mb-2 text-center">שווי בזבוזים: <span class="font-bold" id="total-wasted-cost-summary">₪ 0.00</span></p>
+                    <p class="text-gray-600 text-center text-sm">התחל לדווח על בזבוזים בסיום קנייה כדי לראות תובנות!</p>
+                </section>
+
+                <section class="mb-8 p-4 bg-pink-50 rounded-md shadow-sm border border-pink-200">
+                    <h2 class="text-xl font-semibold text-pink-800 mb-4 text-center">🌟 תובנות המאסטרו</h2>
+                    <div id="insight-text" class="text-gray-600 text-center text-sm">
+                        <p class="text-gray-500">המערכת לומדת את הרגלי הקנייה שלך. ברגע שתאסוף מספיק נתונים (0/5 פריטים נרכשו מספר פעמים), תציג כאן תובנות חכמות!</p>
+                    </div>
+                </section>
+
+                <section class="flex-grow p-4 bg-white rounded-md border border-gray-200 shadow-sm overflow-y-auto">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">רשימת הקניות שלך</h2>
+                    <div id="shopping-list" class="space-y-3 mb-4">
+                        <p class="text-gray-500">אין פריטים ברשימה עדיין.</p>
+                    </div>
+                    <div class="text-center text-2xl font-bold text-gray-900 mb-4">
+                        סה"כ לסל: <span id="total-cost">₪ 0.00</span>
+                    </div>
+                    <button id="complete-purchase-btn" class="w-full bg-green-600 text-white p-3 rounded-md font-semibold text-lg hover:bg-green-700 transition">סיים קנייה 🎉</button>
+                </section>
+            </div>
+
+            <div class="face face-2 bg-gray-50 shadow-lg rounded-lg p-6 flex flex-col h-full">
+                <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">📜 היסטוריית קניות</h2>
+                <div id="purchase-history-list" class="space-y-4 overflow-y-auto flex-grow">
+                    <p class="text-gray-500 text-center">אין היסטוריית קניות לשלוף.</p>
+                </div>
+            </div>
+
+            <div class="face face-3 bg-gray-50 shadow-lg rounded-lg p-6 flex flex-col h-full">
+                <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">💸 דוח חיסכון והזדמנויות</h2>
+                <div id="waste-report-list" class="space-y-4 overflow-y-auto flex-grow">
+                    <p class="text-gray-500 text-center">אין נתונים לדוח הזדמנויות חיסכון עדיין. ודא שאתה מזין מחירים וכמויות בזבוז בסיום קנייה.</p>
+                </div>
+            </div>
+
+            <div class="face face-4 bg-gray-50 shadow-lg rounded-lg p-6 flex flex-col h-full">
+                <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">⚙️ הגדרות</h2>
+                <section class="mb-8 p-4 bg-white rounded-md shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">הגדרות כלליות</h3>
+                    <div class="mb-4">
+                        <label for="user-name-setting" class="block text-gray-700 text-right mb-2">שם משתמש:</label>
+                        <input type="text" id="user-name-setting" class="w-full p-3 border border-gray-300 rounded-md text-right" placeholder="הכנס את שמך">
+                        <button id="save-user-name-btn" class="mt-3 bg-blue-500 text-white p-2 rounded-md font-semibold hover:bg-blue-600 transition w-full">שמור שם משתמש</button>
+                    </div>
+                </section>
+
+                <section class="p-4 bg-red-50 rounded-md shadow-sm border border-red-200">
+                    <h3 class="text-xl font-semibold text-red-800 mb-4">ניהול נתונים</h3>
+                    <button id="reset-all-data-btn" class="w-full bg-red-600 text-white p-3 rounded-md font-semibold hover:bg-red-700 transition">אפס את כל הנתונים</button>
+                    <p class="text-sm text-red-700 mt-2 text-center">פעולה זו תמחק את כל הנתונים שלך מהאפליקציה.</p>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="purchase-confirmation-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 class="text-2xl font-bold text-center mb-4">אישור קנייה</h2>
+            <p class="text-gray-700 mb-4 text-center">אנא עיין בפריטים ועדכן מחירים או כמויות בזבוז.</p>
+            <div id="modal-item-list" class="space-y-4 mb-6 max-h-80 overflow-y-auto">
+                </div>
+            <div class="flex justify-end gap-3">
+                <button id="close-modal-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 transition">ביטול</button>
+                <button id="confirm-final-purchase-btn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">סיים קנייה</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="maestro-prompt" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <p id="maestro-prompt-text" class="text-gray-800 text-lg mb-6 text-center font-medium"></p>
+            <div id="maestro-prompt-actions" class="flex justify-center gap-3">
+                </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
